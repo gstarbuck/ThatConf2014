@@ -6,10 +6,48 @@
     <title>Sign</title>
     <link href="../Content/jquery.signaturepad.css" rel="stylesheet" />
 </head>
-<body>
+<body style="background-image:url(http://yahara-gstarb81:9000/Images/ImportantDocument.png);background-repeat:no-repeat">
+    <form method="post" action="#" class="sigPad">
+        <div class="sig sigWrapper" style="padding-top:200px; padding-left:180px">
+            <canvas class="pad" width="350px" height="100px" />
+            <input type="hidden" name="output" class="output" />
+        </div>
+        <button type="submit" style="margin-left:370px; width:150px">Capture Signature</button>
+        <button type="button" style="margin-left:370px; width:150px" onclick="sendSigToServer()">Send to Server</button>
+    </form>
+
+
+    <img id="sigImage" />
+
+    <span hidden id="imgData" style="word-wrap:break-word;" />
 
     <script src="../Scripts/jquery-1.8.2.js"></script>
     <script src="../Scripts/jquery.signaturepad.js"></script>
     <script src="../Scripts/json2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.sigPad').signaturePad({ drawOnly: true });
+        });
+
+        function sendSigToServer() {
+
+            var imageData = document.getElementById('imgData');
+
+            var base64portion = imageData.innerText.split(',')[1];
+
+            if (base64portion) {
+                var parameter = $.param({ '': base64portion });
+                $.ajax({
+                    url: 'http://yahara-gstarb81:9000/api/DocumentImage/',
+                    type: 'POST',
+                    data: parameter,
+                    contentType: 'application/x-www-form-urlencoded'
+                }).success(function (res, status, xhr) {
+                    window.open('http://yahara-gstarb81:9000/Images/' + xhr.getResponseHeader('imageFilename') + '.png');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

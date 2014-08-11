@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sign
 {
@@ -10,6 +6,18 @@ namespace Sign
     {
         static void Main(string[] args)
         {
+            string baseAddress = "http://yahara-gstarb81:9000";
+
+            // Start the OWIN host
+            var service = Microsoft.Owin.Hosting.WebApp.Start<StartupConfig>(url: baseAddress);
+            Console.WriteLine("Service started, listening at " + baseAddress);
+            Console.WriteLine("Hit any key to terminate");
+
+            // Listen for a keypress to terminate
+            Console.ReadLine();
+
+            // When terminated, dispose the service
+            service.Dispose();
         }
     }
 }
